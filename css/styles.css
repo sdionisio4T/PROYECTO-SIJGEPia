@@ -450,11 +450,23 @@ body {
     font-size: 22px;
   }
 } 
+
 }
 body {
   margin: 0;
   font-family: Arial;
   background: #f4f6fb;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.logo span {
+  font-weight: bold;
+  color: white;
 }
 
 /* NAVBAR */
