@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SIGJEP - Asistente Jurídico Inteligente</title>
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+
+  <!-- HEADER -->
+  <header class="header">
+    <div class="header-izquierda">
+      <button class="menu-btn" onclick="toggleSidebar()">☰ Menú</button>
+      <img src="assets/Logo.png" alt="SIGJEP" class="logo">
+    </div>
+    <div class="header-derecha">
+      <span class="usuario">Usuario - Abogado 🔔 15</span>
+    </div>
+  </header>
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar" id="sidebar">
+    <p class="menu-titulo">☰ Menú</p>
+    <a href="dashboard.html">Dashboard</a>
+    <a href="expedientes.html">Expedientes</a>
+    <a href="modulo-ia.html">Módulo IA</a>
+
+    <div class="sidebar-extra">
+      <a href="login.html" class="cerrar-sesion">Cerrar Sesión</a>
+      <p>© 2026 SIGJEP - Sistema de Gestión Jurídica</p>
+    </div>
+  </aside>
+
+  <!-- CONTENIDO -->
+  <main class="contenido">
+    <section class="modulo-ia">
+      <h1 class="titulo-ia">Asistente Jurídico Inteligente</h1>
+      <p class="subtitulo-ia">Herramienta de apoyo para análisis de expedientes, riesgos y vencimientos</p>
+
+      <!-- ACCIONES -->
+      <div class="acciones-ia">
+        <button class="accion-btn">Resumir expediente</button>
+        <button class="accion-btn">Detectar riesgo</button>
+        <button class="accion-btn">Sugerir acción legal</button>
+      </div>
+
+      <!-- CHAT -->
+      <div class="chat-ia">
+        <div class="mensaje ia">
+          <p><strong>Asistente IA:</strong> Hola. Soy tu asistente jurídico. Puedo ayudarte a analizar expedientes, identificar riesgos procesales y sugerir acciones.</p>
+        </div>
+
+        <div class="mensaje usuario-chat">
+          <p><strong>Tú:</strong> Analiza el expediente EXP-001 y dime si tiene riesgo de vencimiento.</p>
+        </div>
+
+        <div class="mensaje ia">
+          <p><strong>Asistente IA:</strong> El expediente EXP-001 presenta un vencimiento próximo en 1 día. Se recomienda revisión inmediata.</p>
+        </div>
+      </div>
+
+      <!-- RESULTADO -->
+      <div class="resultado-ia">
+        <h3>Resultado del análisis</h3>
+        <p><strong>Expediente:</strong> EXP-001</p>
+        <p><strong>Nivel de riesgo:</strong> Alto</p>
+        <p><strong>Recomendación:</strong> Priorizar revisión inmediata y activar alerta jurídica.</p>
+      </div>
+
+      <!-- ENTRADA -->
+      <div class="entrada-ia">
+        <textarea placeholder="Escribe aquí tu consulta jurídica..."></textarea>
+        <button class="btn-enviar">Analizar</button>
+      </div>
+    </section>
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <p>© 2026 SIGJEP - Sistema de Gestión Jurídica</p>
+  </footer>
+
+  <script src="js/main.js"></script>
+</body>
+</html>
