@@ -7,7 +7,6 @@
 </head>
 <body>
 
-<!-- NAVBAR -->
 <header class="navbar">
   <div class="logo">SIGJEP</div>
   <div class="user">Usuario - Abogado (15)</div>
@@ -15,27 +14,40 @@
 
 <div class="main">
 
-  <!-- SIDEBAR -->
   <aside class="sidebar">
-    <p>Menú</p>
+    <h3>Menú</h3>
     <a href="#">Dashboard</a>
     <a href="#" class="active">Expedientes</a>
     <a href="#">Módulo IA</a>
   </aside>
 
-  <!-- CONTENIDO -->
   <section class="content">
 
     <div class="header">
       <h2>Gestión de Expedientes</h2>
-      <button class="btn">Nuevo Expediente</button>
+      <button class="btn">+ Nuevo Expediente</button>
     </div>
 
+    <!-- FILTROS -->
     <div class="filtros">
-      Filtros | Tipo | Estado | Buscar
+      <input type="text" id="buscar" placeholder="Buscar expediente...">
+
+      <select id="tipo">
+        <option value="">Tipo</option>
+        <option value="Tutela">Tutela</option>
+        <option value="Demanda">Demanda</option>
+      </select>
+
+      <select id="estado">
+        <option value="">Estado</option>
+        <option value="Activo">Activo</option>
+        <option value="En proceso">En proceso</option>
+        <option value="Cerrado">Cerrado</option>
+      </select>
     </div>
 
-    <table>
+    <!-- TABLA -->
+    <table id="tabla">
       <thead>
         <tr>
           <th>Expediente</th>
@@ -54,7 +66,7 @@
           <td>Rodríguez</td>
           <td>10/01/2026</td>
           <td>1 día</td>
-          <td>Activo</td>
+          <td><span class="badge activo">Activo</span></td>
         </tr>
 
         <tr>
@@ -63,18 +75,28 @@
           <td>Pérez</td>
           <td>08/01/2026</td>
           <td>3 días</td>
-          <td>En proceso</td>
+          <td><span class="badge proceso">En proceso</span></td>
         </tr>
+
+        <tr>
+          <td>EXP-003</td>
+          <td>PQRS</td>
+          <td>Gómez</td>
+          <td>01/01/2025</td>
+          <td>10 días</td>
+          <td><span class="badge cerrado">Cerrado</span></td>
+        </tr>
+
       </tbody>
     </table>
 
   </section>
 </div>
 
-<!-- FOOTER -->
 <footer>
   © 2026 SIGJEP - Sistema de Gestión Jurídica
 </footer>
 
+<script src="script.js"></script>
 </body>
 </html>
