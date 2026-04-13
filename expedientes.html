@@ -78,40 +78,44 @@
 <table>
 
 <thead>
-<tr>
-<th>Tipo</th>
-<th>Demandante</th>
-<th>Fecha</th>
-<th>Vence</th>
-<th>Estado</th>
-</tr>
+  <tr>
+    <th>Tipo</th>
+    <th>Demandante</th>
+    <th>Fecha</th>
+    <th>Vence</th>
+    <th>Estado</th>
+    <th>Docs</th>
+  </tr>
 </thead>
 
 <tbody>
 
-<tr>
-<td>Tutela</td>
-<td>Rodríguez</td>
-<td>10/01/2026</td>
-<td>1 día</td>
-<td class="urgente">Urgente</td>
-</tr>
+  <tr>
+    <td>Tutela</td>
+    <td>Rodríguez</td>
+    <td>10/01/2026</td>
+    <td>1 día</td>
+    <td class="urgente">Urgente</td>
+    <td><button onclick="verDocumentos(1)">📄</button></td>
+  </tr>
 
-<tr>
-<td>Demanda</td>
-<td>Pérez</td>
-<td>08/01/2026</td>
-<td>3 días</td>
-<td class="proximo">Próximo</td>
-</tr>
+  <tr>
+    <td>Demanda</td>
+    <td>Pérez</td>
+    <td>08/01/2026</td>
+    <td>3 días</td>
+    <td class="proximo">Próximo</td>
+    <td><button onclick="verDocumentos(1)">📄</button></td>
+  </tr>
 
-<tr>
-<td>PQRS</td>
-<td>Gómez</td>
-<td>01/01/2025</td>
-<td>10 días</td>
-<td class="atiempo">A tiempo</td>
-</tr>
+  <tr>
+    <td>PQRS</td>
+    <td>Gómez</td>
+    <td>01/01/2025</td>
+    <td>10 días</td>
+    <td class="atiempo">A tiempo</td>
+    <td><button onclick="verDocumentos(1)">📄</button></td>
+  </tr>
 
 </tbody>
 
@@ -124,6 +128,43 @@
 <footer>
 <p> 2026 SIGJEP - Sistema de Gestión Jurídica</p>
 </footer>
+
+<!-- MODAL NUEVO EXPEDIENTE -->
+<div id="modalExpediente" class="modal">
+  <div class="modal-contenido">
+    <h3>Nuevo Expediente</h3>
+
+    <form id="formExpediente" class="form-grid">
+
+      <div class="form-group">
+        <label>Tipo</label>
+        <select id="tipo">
+          <option>Tutela</option>
+          <option>Demanda</option>
+          <option>PQRS</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label>Demandante</label>
+        <input type="text" id="demandante" required>
+      </div>
+
+      <div class="form-group">
+        <label>Fecha</label>
+        <input type="date" id="fecha" required>
+      </div>
+
+      <div class="form-botones">
+        <button type="submit" class="btn-guardar">Guardar</button>
+        <button type="button" id="cerrarModal" class="btn-cancelar">Cancelar</button>
+      </div>
+
+    </form>
+  </div>
+</div>
+
+<script src="js/expedientes.js"></script>
 
 </body>
 </html>
