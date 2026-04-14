@@ -80,4 +80,13 @@ export async function descargarBorrador() {
     } catch (error) {
         console.error("Error al descargar borrador:", error);
     }
+    function mostrarSpinner() {
+    document.getElementById("spinner").style.display = "block";
+    document.getElementById("overlaySpinner").style.display = "block";
+}
+
+function ocultarSpinner() {
+    document.getElementById("spinner").style.display = "none";
+    document.getElementById("overlaySpinner").style.display = "none";
+}
 }
