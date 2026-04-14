@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>SIGJEP - Asistente Jurídico Inteligente</title>
+  <title>SIGJEP - Módulo IA</title>
   <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
@@ -23,68 +23,67 @@
     <a href="dashboard.html">Dashboard</a>
     <a href="expedientes.html">Expedientes</a>
     <a href="modulo-ia.html">Módulo IA</a>
+    <a href="#">Alertas</a>
+    <a href="#">Documentos</a>
+    <a href="#">Reportes</a>
+    <a href="#">PQRS</a>
   </details>
   <a href="index.html" class="logout">Cerrar sesión</a>
 </aside>
 
 <!-- CONTENIDO -->
 <main class="contenido">
-  <section class="modulo-ia">
+  <div class="content">
 
-    <div class="ia-container">
+    <h2>Asistente Jurídico con IA</h2>
 
-      <h2>Asistente Jurídico Inteligente</h2>
-      <p class="descripcion">
-        Herramienta de apoyo para análisis de expedientes, riesgos y vencimientos
-      </p>
+    <div class="ia-panel">
 
-      <!-- SELECT EXPEDIENTE -->
-      <select id="expedienteSelect" class="ia-select" onchange="seleccionarExpediente()">
-        <option value="">Seleccionar expediente</option>
-        <option value="1">EXP-001</option>
-        <option value="2">EXP-002</option>
-      </select>
+      <!-- DOCUMENTOS -->
+      <div class="ia-card">
+        <h3>Documentos</h3>
 
-      <!-- BOTONES -->
-      <div class="ia-botones">
-        <button onclick="resumir()">Resumir expediente</button>
-        <button onclick="clasificar()">Detectar riesgo</button>
-        <button onclick="descargarBorrador()">Sugerir acción legal</button>
+        <p>Documento seleccionado</p>
+        <strong>archivo.pdf</strong>
+
+        <button class="btn-primario">Subir Archivo</button>
       </div>
 
-      <!-- CHAT -->
-      <div class="ia-chat" id="chatIA">
-        <div class="mensaje ia">
-          Hola. Soy tu asistente jurídico. Puedo ayudarte a analizar expedientes, identificar riesgos procesales y sugerir acciones.
-        </div>
+      <!-- ANÁLISIS IA -->
+      <div class="ia-card">
+        <h3>Análisis IA</h3>
+
+        <button class="btn-primario">Analizar con IA</button>
+
+        <p><strong>Clasificación:</strong> Tutela (95%)</p>
+
+        <p>
+          <strong>Resumen:</strong><br>
+          Texto generado<br>
+          <a href="#">Resumen.pdf</a>
+        </p>
+
+        <button class="btn-primario">Generar Resumen</button>
       </div>
 
-      <!-- RESULTADOS -->
-      <div class="ia-resultado">
-        <h3>Resultado del análisis</h3>
-        <p><strong>Tipo de caso:</strong> <span id="resultadoClasificacion">-</span></p>
-        <p><strong>Resumen:</strong></p>
-        <textarea id="resultadoResumen" readonly></textarea>
-      </div>
+      <!-- BORRADORES -->
+      <div class="ia-card">
+        <h3>Borradores</h3>
 
-      <!-- INPUT -->
-      <div class="ia-input">
-        <textarea id="inputUsuario" placeholder="Escribe aquí tu consulta jurídica..."></textarea>
-        <button onclick="enviarConsulta()">Analizar</button>
+        <button class="btn-verde">Aprobar</button>
+        <button class="btn-primario">Editar</button>
+        <button class="btn-rojo">Descartar</button>
       </div>
 
     </div>
 
-  </section>
+  </div>
 </main>
 
 <!-- FOOTER -->
 <footer class="footer">
   <p>© 2026 SIGJEP - Sistema de Gestión Jurídica</p>
 </footer>
-
-<!-- SCRIPT IA -->
-<script type="module" src="js/ia.js"></script>
 
 </body>
 </html>
