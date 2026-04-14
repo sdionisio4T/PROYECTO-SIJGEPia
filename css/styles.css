@@ -767,23 +767,50 @@ thead {
 tbody {
     display: table-row-group;
 }
-.ia-panel {
+.content {
   display: flex;
-  gap: 30px;
-  margin-top: 20px;
+  flex-direction: column;
+  align-items: center; /* centra todo */
+  gap: 20px;
 }
 
+/* TÍTULO */
+.content h2 {
+  text-align: center;
+  color: var(--texto);
+}
+
+/* PANEL DE 3 COLUMNAS */
+.ia-panel {
+  display: flex;
+  justify-content: center; /* centra horizontal */
+  align-items: flex-start;
+  gap: 30px;
+  margin-top: 30px;
+  flex-wrap: wrap; /* responsive */
+  width: 100%;
+}
+
+/* TARJETAS (CUADROS) */
 .ia-card {
   background: #d1d5db;
   padding: 20px;
-  border-radius: 8px;
-  width: 300px;
+  border-radius: 10px;
+  width: 280px;
   min-height: 350px;
   display: flex;
   flex-direction: column;
   gap: 15px;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+  transition: 0.2s;
 }
 
+/* EFECTO HOVER */
+.ia-card:hover {
+  transform: translateY(-5px);
+}
+
+/* TÍTULO DE CADA CARD */
 .ia-card h3 {
   background: #1f2937;
   color: white;
@@ -792,26 +819,59 @@ tbody {
   text-align: center;
 }
 
+/* BOTONES GENERALES */
+.ia-card button {
+  border: none;
+  padding: 10px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+/* BOTÓN AZUL */
 .btn-primario {
   background: #1E3A8A;
   color: white;
-  border: none;
-  padding: 10px;
-  cursor: pointer;
 }
 
+/* BOTÓN VERDE */
 .btn-verde {
   background: #22c55e;
   color: white;
-  border: none;
-  padding: 10px;
-  cursor: pointer;
 }
 
+/* BOTÓN ROJO */
 .btn-rojo {
   background: #ef4444;
   color: white;
-  border: none;
-  padding: 10px;
-  cursor: pointer;
+}
+
+/* HOVER BOTONES */
+.btn-primario:hover {
+  background: #162a63;
+}
+
+.btn-verde:hover {
+  background: #16a34a;
+}
+
+.btn-rojo:hover {
+  background: #dc2626;
+}
+
+/* TEXTO */
+.ia-card p {
+  font-size: 13px;
+  color: #1f2937;
+}
+
+/* LINKS */
+.ia-card a {
+  color: #1E3A8A;
+  font-weight: bold;
+  text-decoration: none;
+}
+
+.ia-card a:hover {
+  text-decoration: underline;
 }
