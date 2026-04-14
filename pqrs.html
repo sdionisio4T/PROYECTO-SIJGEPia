@@ -1,30 +1,99 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <title>PQRS</title>
-  <link rel="stylesheet" href="css/styles.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PQRS</title>
+<link rel="icon" href="assets/logo 2.png" type="image/png">
+<link rel="stylesheet" href="css/styles.css">
 </head>
+
 <body>
 
+<header class="header">
+  <div class="header-izquierda">
+    <img src="assets/Logo.png" alt="SIGJEP" class="logo">
+  </div>
+  <div class="header-derecha">
+    <span class="usuario">Usuario - sin rol</span>  
+  </div>
+</header>
+
+<aside class="sidebar">
+  <details open>
+    <summary>☰ Menú</summary>
+    <a href="dashboard.html">Dashboard</a>
+    <a href="expedientes.html">Expedientes</a>
+    <a href="modulo-ia.html">Módulo IA</a>
+      <a href="alertas.html">Alertas</a>
+      <a href="documentos.html">Documentos</a>
+      <a href="reportes.html">Reportes</a>
+      <a href="pqrs.html">PQRS</a>
+  </details>
+  <a href="index.html" class="logout">Cerrar sesión</a>
+</aside>
+
+<section class="content">
+
+<h2>Bienvenido Usuario</h2>
+<p>Aquí puedes gestionar tus solicitudes PQRS</p>
 <h2>Formulario PQRS</h2>
 
-<form id="pqrsForm">
-  <input type="text" id="nombre" placeholder="Nombre">
-  <input type="email" id="correo" placeholder="Correo">
-  
-  <select id="tipo">
-    <option value="">Tipo de solicitud</option>
-    <option>Petición</option>
-    <option>Queja</option>
-    <option>Reclamo</option>
-    <option>Sugerencia</option>
-  </select>
+<div class="top">
+    <button id="btnNuevo" class="nuevo">Nuevo PQRS</button>
+    <h2>Lista de PQRS</h2>
+    
+</div>
 
-  <textarea id="mensaje" placeholder="Escribe tu mensaje"></textarea>
+<table id="tablaPQRS">
 
-  <button type="submit">Enviar</button>
-</form>
+    <thead>
+        <tr>
+            <th>Nombre</th>
+            <th>Correo</th>
+            <th>Tipo</th>
+            <th>Mensaje</th>
+        </tr>
+    </thead>
+
+    <tbody id="tbodyPQRS">
+
+    </tbody>
+
+</table>
+<div id="modal" class="modal">
+
+    <div class="modal-content">
+
+        <h2>Nuevo PQRS</h2>
+
+        <form id="pqrsForm">
+
+            <input type="text" id="nombre" placeholder="Nombre">
+
+            <input type="email" id="correo" placeholder="Correo">
+
+            <select id="tipo">
+                <option value="">Tipo de solicitud</option>
+                <option>Petición</option>
+                <option>Queja</option>
+                <option>Reclamo</option>
+                <option>Sugerencia</option>
+            </select>
+
+            <textarea id="mensaje" placeholder="Escribe tu mensaje"></textarea>
+
+            <button type="submit">Guardar</button>
+
+            <button type="button" id="cerrarModal">
+                Cancelar
+            </button>
+
+        </form>
+
+    </div>
+
+</div>
 
 <script src="js/pqrs.js"></script>
 
