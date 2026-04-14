@@ -767,3 +767,51 @@ thead {
 tbody {
     display: table-row-group;
 }
+.ia-panel {
+  display: flex;
+  gap: 30px;
+  margin-top: 20px;
+}
+
+.ia-card {
+  background: #d1d5db;
+  padding: 20px;
+  border-radius: 8px;
+  width: 300px;
+  min-height: 350px;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.ia-card h3 {
+  background: #1f2937;
+  color: white;
+  padding: 10px;
+  border-radius: 5px;
+  text-align: center;
+}
+
+.btn-primario {
+  background: #1E3A8A;
+  color: white;
+  border: none;
+  padding: 10px;
+  cursor: pointer;
+}
+
+.btn-verde {
+  background: #22c55e;
+  color: white;
+  border: none;
+  padding: 10px;
+  cursor: pointer;
+}
+
+.btn-rojo {
+  background: #ef4444;
+  color: white;
+  border: none;
+  padding: 10px;
+  cursor: pointer;
+}
