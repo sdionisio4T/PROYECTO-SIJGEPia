@@ -1,12 +1,12 @@
 import { clasificarDocumento, generarResumen, generarBorrador } from "./api.js";
 
-// 🔹 VARIABLES GLOBALES
+//  VARIABLES GLOBALES
 let expedienteSeleccionado = null;
 let archivoActual = null;
-let listaArchivos = []; // 🔥 HISTORIAL
+let listaArchivos = [];
 
 
-// 🔹 SELECCIONAR EXPEDIENTE
+//  SELECCIONAR EXPEDIENTE
 export function seleccionarExpediente() {
     const select = document.getElementById("expedienteSelect");
     expedienteSeleccionado = select.value;
@@ -15,7 +15,7 @@ export function seleccionarExpediente() {
 }
 
 
-// 🔹 SPINNER
+//  SPINNER
 function mostrarSpinner() {
     document.getElementById("spinner").style.display = "block";
     document.getElementById("overlaySpinner").style.display = "block";
@@ -27,26 +27,49 @@ function ocultarSpinner() {
 }
 
 
-// 🔹 RENDER LISTA EN PANTALLA
+//  RENDERIZAR ARCHIVOS CON TARJETA + BARRA
 function renderizarArchivos() {
     const contenedor = document.getElementById("listaArchivos");
-
     if (!contenedor) return;
 
     contenedor.innerHTML = "";
 
-    listaArchivos.forEach((archivo, index) => {
-        const item = document.createElement("div");
-        item.textContent = `${index + 1}. ${archivo.name}`;
-        item.style.fontSize = "12px";
-        item.style.padding = "5px";
+    listaArchivos.forEach((archivo) => {
 
+        const item = document.createElement("div");
+        item.classList.add("archivo-item");
+
+        const nombre = document.createElement("div");
+        nombre.classList.add("archivo-nombre");
+        nombre.textContent = archivo.name;
+
+        const barra = document.createElement("div");
+        barra.classList.add("barra");
+
+        const progreso = document.createElement("div");
+        progreso.classList.add("progreso");
+
+        barra.appendChild(progreso);
+        item.appendChild(nombre);
+        item.appendChild(barra);
         contenedor.appendChild(item);
+
+        // 🔥 ANIMACIÓN DE PROGRESO
+        let porcentaje = 0;
+
+        const intervalo = setInterval(() => {
+            porcentaje += 10;
+            progreso.style.width = porcentaje + "%";
+
+            if (porcentaje >= 100) {
+                clearInterval(intervalo);
+            }
+        }, 100);
     });
 }
 
 
-// 🔹 SUBIR ARCHIVO
+//  SUBIR ARCHIVO
 window.addEventListener("DOMContentLoaded", () => {
     const inputArchivo = document.getElementById("inputArchivo");
 
@@ -62,12 +85,12 @@ window.addEventListener("DOMContentLoaded", () => {
 
             archivoActual = archivo;
 
-            // 🔥 GUARDAR EN HISTORIAL
+            // 🔥 GUARDAR EN LISTA
             listaArchivos.push(archivo);
 
             document.getElementById("nombreArchivo").textContent = archivo.name;
 
-            renderizarArchivos(); // 🔥 ACTUALIZA LISTA
+            renderizarArchivos();
 
             ocultarSpinner();
 
@@ -77,7 +100,7 @@ window.addEventListener("DOMContentLoaded", () => {
 });
 
 
-// 🔹 CLASIFICAR (SIMULADO)
+//  CLASIFICAR (SIMULADO)
 export async function clasificar() {
     if (!expedienteSeleccionado) {
         alert("Selecciona un expediente primero");
@@ -104,7 +127,7 @@ export async function clasificar() {
 }
 
 
-// 🔹 RESUMIR (SIMULADO)
+//  RESUMIR (SIMULADO)
 export async function resumir() {
     if (!expedienteSeleccionado) {
         alert("Selecciona un expediente primero");
@@ -132,7 +155,7 @@ export async function resumir() {
 }
 
 
-// 🔹 BORRADOR (SIMULADO)
+//  BORRADOR (SIMULADO)
 export function descargarBorrador() {
     if (!archivoActual) {
         alert("Primero sube un archivo");
@@ -140,14 +163,14 @@ export function descargarBorrador() {
     }
 
     const contenido = `
-    BORRADOR JURÍDICO
+BORRADOR JURÍDICO
 
-    Expediente: ${expedienteSeleccionado}
+Expediente: ${expedienteSeleccionado}
 
-    Documento analizado: ${archivoActual.name}
+Documento analizado: ${archivoActual.name}
 
-    Se recomienda actuación inmediata.
-    `;
+Se recomienda actuación inmediata.
+`;
 
     const blob = new Blob([contenido], { type: "application/msword" });
 
@@ -158,7 +181,7 @@ export function descargarBorrador() {
 }
 
 
-// 🔹 CONECTAR CON HTML
+//  CONECTAR CON HTML
 window.seleccionarExpediente = seleccionarExpediente;
 window.clasificar = clasificar;
 window.resumir = resumir;
