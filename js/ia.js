@@ -1,10 +1,12 @@
 import { clasificarDocumento, generarResumen, generarBorrador } from "./api.js";
 
-// Variable global
+// 🔹 VARIABLES GLOBALES
 let expedienteSeleccionado = null;
+let archivoActual = null;
+let listaArchivos = []; // 🔥 HISTORIAL
 
 
-//  Seleccionar expediente
+// 🔹 SELECCIONAR EXPEDIENTE
 export function seleccionarExpediente() {
     const select = document.getElementById("expedienteSelect");
     expedienteSeleccionado = select.value;
@@ -13,7 +15,7 @@ export function seleccionarExpediente() {
 }
 
 
-//  SPINNER
+// 🔹 SPINNER
 function mostrarSpinner() {
     document.getElementById("spinner").style.display = "block";
     document.getElementById("overlaySpinner").style.display = "block";
@@ -25,104 +27,139 @@ function ocultarSpinner() {
 }
 
 
-//  Clasificar documento
+// 🔹 RENDER LISTA EN PANTALLA
+function renderizarArchivos() {
+    const contenedor = document.getElementById("listaArchivos");
+
+    if (!contenedor) return;
+
+    contenedor.innerHTML = "";
+
+    listaArchivos.forEach((archivo, index) => {
+        const item = document.createElement("div");
+        item.textContent = `${index + 1}. ${archivo.name}`;
+        item.style.fontSize = "12px";
+        item.style.padding = "5px";
+
+        contenedor.appendChild(item);
+    });
+}
+
+
+// 🔹 SUBIR ARCHIVO
+window.addEventListener("DOMContentLoaded", () => {
+    const inputArchivo = document.getElementById("inputArchivo");
+
+    if (inputArchivo) {
+        inputArchivo.addEventListener("change", async function () {
+            const archivo = inputArchivo.files[0];
+
+            if (!archivo) return;
+
+            mostrarSpinner();
+
+            await new Promise(resolve => setTimeout(resolve, 1500));
+
+            archivoActual = archivo;
+
+            // 🔥 GUARDAR EN HISTORIAL
+            listaArchivos.push(archivo);
+
+            document.getElementById("nombreArchivo").textContent = archivo.name;
+
+            renderizarArchivos(); // 🔥 ACTUALIZA LISTA
+
+            ocultarSpinner();
+
+            console.log("Archivo cargado:", archivo);
+        });
+    }
+});
+
+
+// 🔹 CLASIFICAR (SIMULADO)
 export async function clasificar() {
     if (!expedienteSeleccionado) {
         alert("Selecciona un expediente primero");
         return;
     }
 
+    if (!archivoActual) {
+        alert("Primero sube un archivo");
+        return;
+    }
+
     try {
         mostrarSpinner();
 
-        const resultado = await clasificarDocumento(expedienteSeleccionado);
+        await new Promise(r => setTimeout(r, 2000));
 
-        document.getElementById("resultadoClasificacion").textContent =
-            resultado.tipo || "Sin resultado";
+        document.getElementById("resultadoClasificacion").textContent = "Tutela";
 
     } catch (error) {
-        console.error("Error al clasificar:", error);
+        console.error(error);
     } finally {
         ocultarSpinner();
     }
 }
 
 
-//  Generar resumen
+// 🔹 RESUMIR (SIMULADO)
 export async function resumir() {
     if (!expedienteSeleccionado) {
         alert("Selecciona un expediente primero");
         return;
     }
 
-    try {
-        mostrarSpinner();
-
-        const resumen = await generarResumen(expedienteSeleccionado);
-
-        document.getElementById("resultadoResumen").value =
-            resumen.texto || "No se pudo generar el resumen";
-
-    } catch (error) {
-        console.error("Error al generar resumen:", error);
-    } finally {
-        ocultarSpinner();
-    }
-}
-
-
-//  Descargar borrador
-export async function descargarBorrador() {
-    if (!expedienteSeleccionado) {
-        alert("Selecciona un expediente primero");
+    if (!archivoActual) {
+        alert("Primero sube un archivo");
         return;
     }
 
     try {
         mostrarSpinner();
 
-        const archivo = await generarBorrador(expedienteSeleccionado);
+        await new Promise(r => setTimeout(r, 2000));
 
-        const blob = new Blob([archivo], {
-            type: "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
-        });
-
-        const url = window.URL.createObjectURL(blob);
-
-        const a = document.createElement("a");
-        a.href = url;
-        a.download = `borrador_${expedienteSeleccionado}.docx`;
-        a.click();
-
-        window.URL.revokeObjectURL(url);
+        document.getElementById("resultadoResumen").value =
+            "El documento corresponde a una acción de tutela por posible vulneración de derechos fundamentales. Se recomienda revisión inmediata.";
 
     } catch (error) {
-        console.error("Error al descargar borrador:", error);
+        console.error(error);
     } finally {
         ocultarSpinner();
     }
 }
 
 
-//  INPUT FILE (cuando cargue la página)
-window.addEventListener("DOMContentLoaded", () => {
-    const inputArchivo = document.getElementById("inputArchivo");
-
-    if (inputArchivo) {
-        inputArchivo.addEventListener("change", function () {
-            const archivo = inputArchivo.files[0];
-
-            if (archivo) {
-                document.getElementById("nombreArchivo").textContent = archivo.name;
-            }
-        });
+// 🔹 BORRADOR (SIMULADO)
+export function descargarBorrador() {
+    if (!archivoActual) {
+        alert("Primero sube un archivo");
+        return;
     }
-});
+
+    const contenido = `
+    BORRADOR JURÍDICO
+
+    Expediente: ${expedienteSeleccionado}
+
+    Documento analizado: ${archivoActual.name}
+
+    Se recomienda actuación inmediata.
+    `;
+
+    const blob = new Blob([contenido], { type: "application/msword" });
+
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(blob);
+    a.download = "borrador.doc";
+    a.click();
+}
 
 
-//  NECESARIO PARA HTML
+// 🔹 CONECTAR CON HTML
 window.seleccionarExpediente = seleccionarExpediente;
 window.clasificar = clasificar;
 window.resumir = resumir;
 window.descargarBorrador = descargarBorrador;
-}
