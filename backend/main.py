@@ -1,7 +1,60 @@
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
+from fastapi.staticfiles import StaticFiles
+from contextlib import asynccontextmanager
+from pathlib import Path
 
-app = FastAPI()
+# Routers
+from routers import auth, usuarios, casos, expedientes, documentos, ia, reportes, backups
 
+# Crear carpeta uploads/ al arrancar
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    Path("uploads").mkdir(parents=True, exist_ok=True)
+    print("✅ Carpeta uploads/ lista")
+    yield
+
+app = FastAPI(
+    title="SIGJEP API",
+    description="Sistema Inteligente de Gestión Jurídica para Entidades Públicas",
+    version="1.0.0",
+    lifespan=lifespan
+)
+
+# CORS — permite que el frontend se conecte
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=[
+        "http://localhost:5500",   # Live Server VS Code
+        "http://127.0.0.1:5500",
+        "http://localhost:3000",
+    ],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+# Servir archivos subidos
+app.mount("/uploads", StaticFiles(directory="uploads"), name="uploads")
+
+# Conectar routers
+app.include_router(auth.router,        tags=["Auth"])
+app.include_router(usuarios.router,    tags=["Usuarios"])
+app.include_router(casos.router,       tags=["Casos"])
+app.include_router(expedientes.router, tags=["Expedientes"])
+app.include_router(documentos.router,  tags=["Documentos"])
+app.include_router(ia.router,          tags=["IA"])
+app.include_router(reportes.router,    tags=["Reportes"])
+app.include_router(backups.router,     tags=["Backups"])
+
+# Ruta de prueba
 @app.get("/")
 def inicio():
-    return {"status": "SIGJEP API funcionando"}
+    return {"status": "SIGJEP API funcionando ✅"}
+
+# ─────────────────────────────────────────
+# PRUEBA — ejecutar con: python main.py
+# ─────────────────────────────────────────
+# if __name__ == "__main__":
+#     import uvicorn
+#     uvicorn.run("main:app", host="0.0.0.0", port=8000, reload=True)
