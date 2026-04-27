@@ -1,62 +1,72 @@
 function registrar() {
-  let correo = document.querySelector("input[type='email']").value;
-  let password = document.querySelector("input[type='password']").value;
-  let rol = document.querySelector("select").value;
+  let nombre = document.getElementById("nombre").value;
+  let correo = document.getElementById("correo").value;
+  let password = document.getElementById("password").value;
+  let rol = document.getElementById("rol").value;
 
-  if (correo === "" || password === "" || rol === "Seleccionar rol") {
+  if (!nombre || !correo || !password || !rol) {
     alert("Completa todos los campos");
     return false;
   }
 
-  // traer usuarios guardados
-  let usuarios = JSON.parse(localStorage.getItem("usuarios")) || [];
+  fetch("http://127.0.0.1:8000/register", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({
+      nombre: nombre,
+      email: correo,
+      password: password,
+      rol: rol.toLowerCase()
+    })
+  })
+  .then(res => res.json())
+  .then(data => {
+    console.log(data);
 
-  // verificar si ya existe
-  let existe = usuarios.find(user => user.correo === correo);
+    if (data.msg) {
+      alert("Registro exitoso");
+      window.location.href = "../index.html"; // 👈 importante
+    } else {
+      alert(data.error);
+    }
+  })
+  .catch(() => {
+    alert("Error de conexión con el servidor");
+  });
 
-  if (existe) {
-    alert("Este correo ya está registrado");
-    return false;
-  }
-
-  // guardar nuevo usuario
-  usuarios.push({ correo, password, rol });
-
-  localStorage.setItem("usuarios", JSON.stringify(usuarios));
-  localStorage.setItem("rol", rol);
-
-  alert("Registro exitoso");
-
-  window.location.href = "index.html"; // volver al login
   return false;
 }
 
 function login() {
+  let correo = document.querySelector("input[type='email']").value;
+  let password = document.querySelector("input[type='password']").value;
 
-  let correo = document.querySelector("input[type='email']").value.trim();
-  let password = document.querySelector("input[type='password']").value.trim();
+  fetch("http://127.0.0.1:8000/login", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({
+      correo: correo,
+      password: password
+    })
+  })
+  .then(res => res.json())
+  .then(data => {
+    console.log(data);
 
-  let correoGuardado = localStorage.getItem("correo");
-  let passwordGuardado = localStorage.getItem("password");
-  let rolGuardado = localStorage.getItem("rol");
-
-  let error = document.querySelector(".error");
-
-  error.style.display = "none";
-
-  if (correoGuardado === null || passwordGuardado === null) {
-    error.innerText = "Primero debes registrarte";
-    error.style.display = "block";
-    return false;
-  }
-
-  if (correo === correoGuardado && password === passwordGuardado) {
-    window.location.href = "dashboard.html";
-  } else {
-    error.innerText = "Correo o contraseña incorrectos";
-    error.style.display = "block";
-    localStorage.setItem("rolActivo", rolGuardado);
-  }
+    if (data.msg) {
+      localStorage.setItem("rol", data.rol);
+      window.location.href = "pages/dashboard.html";
+    } else {
+      alert(data.error);
+    }
+  })
+  .catch(() => {
+    alert("Error de conexión");
+  });
 
   return false;
 }

@@ -1,49 +1,60 @@
-﻿from fastapi import APIRouter
-from sqlalchemy import text
-from database import SessionLocal
+﻿from fastapi import APIRouter, Depends
+from sqlalchemy.orm import Session
+from database import get_db
+from models.user import User
+from pydantic import BaseModel
+import bcrypt
 
 router = APIRouter()
 
-# GET — listar todos
-@router.get("/usuarios")
-def get_usuarios():
-    db = SessionLocal()
-    resultado = db.execute(text("SELECT id_usuarios, nombre, email, rol, estado FROM usuarios")).fetchall()
-    db.close()
-    return [dict(fila._mapping) for fila in resultado]
+class UserCreate(BaseModel):
+    nombre: str
+    email: str
+    password: str
+    rol: str
 
-# POST — crear uno
-@router.post("/usuarios")
-def crear_usuario(datos: dict):
-    db = SessionLocal()
-    db.execute(
-        text("INSERT INTO usuarios (nombre, email, password, rol, estado) VALUES (:nombre, :email, :password, :rol, 'activo')"),
-        {"nombre": datos["nombre"], "email": datos["email"], "password": datos["password"], "rol": datos["rol"]}
-    )
-    db.commit()
-    db.close()
-    return {"status": "Usuario creado ✅"}
+class UserLogin(BaseModel):
+    email: str
+    password: str
 
-# PUT — editar uno
-@router.put("/usuarios/{id}")
-def editar_usuario(id: int, datos: dict):
-    db = SessionLocal()
-    db.execute(
-        text("UPDATE usuarios SET nombre = :nombre, rol = :rol WHERE id_usuarios = :id"),
-        {"nombre": datos["nombre"], "rol": datos["rol"], "id": id}
-    )
-    db.commit()
-    db.close()
-    return {"status": "Usuario actualizado ✅"}
 
-# DELETE — eliminar uno
-@router.delete("/usuarios/{id}")
-def eliminar_usuario(id: int):
-    db = SessionLocal()
-    db.execute(
-        text("DELETE FROM usuarios WHERE id_usuarios = :id"),
-        {"id": id}
+# REGISTRO
+@router.post("/register")
+def register(user: UserCreate, db: Session = Depends(get_db)):
+
+    usuario_existente = db.query(User).filter(User.email == user.email).first()
+    if usuario_existente:
+        return {"error": "El usuario ya existe"}
+
+    password_hash = bcrypt.hashpw(user.password.encode(), bcrypt.gensalt()).decode()
+
+    nuevo_usuario = User(
+        nombre=user.nombre,
+        email=user.email,
+        password=password_hash,
+        rol=user.rol.lower(),   # 👈 importante
+        estado="activo"
     )
+
+    db.add(nuevo_usuario)
     db.commit()
-    db.close()
-    return {"status": "Usuario eliminado ✅"}
+
+    return {"msg": "Usuario registrado correctamente"}
+
+
+# LOGIN
+@router.post("/login")
+def login(data: UserLogin, db: Session = Depends(get_db)):
+
+    usuario = db.query(User).filter(User.email == data.email).first()
+
+    if not usuario:
+        return {"error": "Usuario no existe"}
+
+    if not bcrypt.checkpw(data.password.encode(), usuario.password.encode()):
+        return {"error": "Contraseña incorrecta"}
+
+    return {
+        "msg": "Login exitoso",
+        "rol": usuario.rol
+    }
