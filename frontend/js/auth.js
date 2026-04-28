@@ -1,44 +1,3 @@
-function registrar() {
-  let nombre = document.getElementById("nombre").value;
-  let correo = document.getElementById("correo").value;
-  let password = document.getElementById("password").value;
-  let rol = document.getElementById("rol").value;
-
-  if (!nombre || !correo || !password || !rol) {
-    alert("Completa todos los campos");
-    return false;
-  }
-
-  fetch("http://127.0.0.1:8000/register", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json"
-    },
-    body: JSON.stringify({
-      nombre: nombre,
-      email: correo,
-      password: password,
-      rol: rol.toLowerCase()
-    })
-  })
-  .then(res => res.json())
-  .then(data => {
-    console.log(data);
-
-    if (data.msg) {
-      alert("Registro exitoso");
-      window.location.href = "../index.html"; // 👈 importante
-    } else {
-      alert(data.error);
-    }
-  })
-  .catch(() => {
-    alert("Error de conexión con el servidor");
-  });
-
-  return false;
-}
-
 function login() {
   let correo = document.querySelector("input[type='email']").value;
   let password = document.querySelector("input[type='password']").value;
@@ -49,22 +8,27 @@ function login() {
       "Content-Type": "application/json"
     },
     body: JSON.stringify({
-      correo: correo,
+      email: correo,
       password: password
     })
   })
-  .then(res => res.json())
-  .then(data => {
-    console.log(data);
+  .then(async res => {
+    const data = await res.json();
+    console.log("STATUS:", res.status);
+    console.log("DATA:", data);
 
-    if (data.msg) {
+    if (res.ok) {
+
       localStorage.setItem("rol", data.rol);
+      localStorage.setItem("token", data.access_token || "");
+
       window.location.href = "pages/dashboard.html";
     } else {
-      alert(data.error);
+      alert(data.detail || data.error || data.msg || "Error al iniciar sesión");
     }
   })
-  .catch(() => {
+  .catch(error => {
+    console.error(error);
     alert("Error de conexión");
   });
 

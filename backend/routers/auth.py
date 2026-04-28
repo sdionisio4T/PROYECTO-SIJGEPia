@@ -1,9 +1,18 @@
 ﻿from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
+from sqlalchemy import text
 from database import get_db
 from models.user import User
 from pydantic import BaseModel
 import bcrypt
+import secrets
+import smtplib
+import os
+from datetime import datetime, timedelta
+from email.message import EmailMessage
+from dotenv import load_dotenv
+
+load_dotenv()
 
 router = APIRouter()
 
@@ -16,6 +25,41 @@ class UserCreate(BaseModel):
 class UserLogin(BaseModel):
     email: str
     password: str
+
+class RecuperarPassword(BaseModel):
+    email: str
+
+
+class ResetPassword(BaseModel):
+    token: str
+    password: str
+
+
+def enviar_correo_recuperacion(destinatario: str, token: str):
+    frontend_url = "http://127.0.0.1:5500/frontend/pages/reset-password.html"
+    link = f"{frontend_url}?token={token}"
+
+    msg = EmailMessage()
+    msg["Subject"] = "Recuperación de contraseña - SIGJEP"
+    msg["From"] = os.getenv("MAIL_FROM")
+    msg["To"] = destinatario
+    msg.set_content(f"""
+Hola,
+
+Solicitaste recuperar tu contraseña en SIGJEP.
+
+Haz clic en este enlace para cambiarla:
+{link}
+
+Este enlace vence en 30 minutos.
+
+Si no solicitaste este cambio, ignora este mensaje.
+""")
+
+    with smtplib.SMTP(os.getenv("MAIL_SERVER"), int(os.getenv("MAIL_PORT"))) as smtp:
+        smtp.starttls()
+        smtp.login(os.getenv("MAIL_USERNAME"), os.getenv("MAIL_PASSWORD"))
+        smtp.send_message(msg)
 
 
 # REGISTRO
@@ -32,7 +76,7 @@ def register(user: UserCreate, db: Session = Depends(get_db)):
         nombre=user.nombre,
         email=user.email,
         password=password_hash,
-        rol=user.rol.lower(),   # 👈 importante
+        rol=user.rol.lower(),  
         estado="activo"
     )
 
@@ -58,3 +102,90 @@ def login(data: UserLogin, db: Session = Depends(get_db)):
         "msg": "Login exitoso",
         "rol": usuario.rol
     }
+
+# SOLICITAR LA RECUPERACION
+
+@router.post("/recuperar-password")
+def recuperar_password(data: RecuperarPassword, db: Session = Depends(get_db)):
+
+    usuario = db.query(User).filter(User.email == data.email).first()
+
+    if not usuario:
+        return {"msg": "Si el correo existe, se enviará un enlace de recuperación"}
+
+    token = secrets.token_urlsafe(32)
+    fecha_expiracion = datetime.now() + timedelta(minutes=30)
+
+    db.execute(
+        text("""
+            INSERT INTO password_reset_tokens (id_usuario, token, fecha_expiracion)
+            VALUES (:id_usuario, :token, :fecha_expiracion)
+        """),
+        {
+            "id_usuario": usuario.id_usuarios,
+            "token": token,
+            "fecha_expiracion": fecha_expiracion
+        }
+    )
+
+    db.commit()
+
+    enviar_correo_recuperacion(usuario.email, token)
+
+    return {"msg": "Se envió un enlace de recuperación al correo"}
+
+
+# CAMBIAR LA CONTRASEÑA
+
+@router.post("/reset-password")
+def reset_password(data: ResetPassword, db: Session = Depends(get_db)):
+
+    resultado = db.execute(
+        text("""
+            SELECT id, id_usuario, usado, fecha_expiracion
+            FROM password_reset_tokens
+            WHERE token = :token
+            LIMIT 1
+        """),
+        {"token": data.token}
+    ).mappings().first()
+
+    if not resultado:
+        return {"error": "Token inválido"}
+
+    if resultado["usado"]:
+        return {"error": "Este token ya fue usado"}
+
+    if resultado["fecha_expiracion"] < datetime.now():
+        return {"error": "El token expiró"}
+
+    nuevo_hash = bcrypt.hashpw(data.password.encode(), bcrypt.gensalt()).decode()
+
+    db.execute(
+        text("""
+            UPDATE usuarios
+            SET password = :password
+            WHERE id_usuarios = :id_usuario
+        """),
+        {
+            "password": nuevo_hash,
+            "id_usuario": resultado["id_usuario"]
+        }
+    )
+
+    db.execute(
+        text("""
+            UPDATE password_reset_tokens
+            SET usado = TRUE
+            WHERE id = :id
+        """),
+        {"id": resultado["id"]}
+    )
+
+    db.commit()
+
+    return {"msg": "Contraseña actualizada correctamente"}
+
+@router.get("/prueba-auth")
+def prueba_auth():
+    return {"msg": "auth actualizado"}

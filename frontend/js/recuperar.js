@@ -1,14 +1,34 @@
 function recuperarPassword() {
-  let correo = document.querySelector("input[type='email']").value;
-  let mensaje = document.getElementById("mensaje");
+  const correo = document.getElementById("correo").value;
+  const mensaje = document.getElementById("mensaje");
 
-  if (correo === "") {
-    alert("Por favor ingresa tu correo");
+  if (!correo) {
+    mensaje.innerText = "Ingresa tu correo";
     return false;
   }
 
-  mensaje.style.display = "block";
-  mensaje.innerText = "Se envió un enlace para cambiar tu contraseña (simulado)";
+  fetch("http://127.0.0.1:8000/recuperar-password", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({
+      email: correo
+    })
+  })
+  .then(async res => {
+    const data = await res.json();
+    console.log(data);
+
+    if (res.ok) {
+      mensaje.innerText = "Si el correo existe, se envió un enlace de recuperación";
+    } else {
+      mensaje.innerText = data.detail || "Error al enviar";
+    }
+  })
+  .catch(() => {
+    mensaje.innerText = "Error de conexión con el servidor";
+  });
 
   return false;
 }
