@@ -21,7 +21,7 @@ function recuperarPassword() {
     console.log(data);
 
     if (res.ok) {
-      mensaje.innerText = "Si el correo existe, se envió un enlace de recuperación";
+      mensaje.innerText = "Revisa tu correo para continuar";
     } else {
       mensaje.innerText = data.detail || "Error al enviar";
     }

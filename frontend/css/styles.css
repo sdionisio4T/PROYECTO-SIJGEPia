@@ -730,5 +730,88 @@ footer {
   border-radius: 8px;
 }
 
+.mensaje {
+  margin-top: 10px;
+  font-size: 14px;
+  text-align: center;
+  color: #2ecc71; /* verde */
+}
 
+/* Color olviaste tu contraseña */
 
+.forgot-password {
+  display: block;
+  margin: 10px 0;
+  text-align: center;
+  color: #ffffff;
+  font-size: 14px;
+  text-decoration: none;
+}
+
+.forgot-password:hover {
+  color: #ffd54f;
+  text-decoration: underline;
+}
+
+/* Mensaje de error o éxito en recuperación de contraseña */
+.mensaje {
+  margin-top: 10px;
+  font-size: 14px;
+  text-align: center;
+  font-weight: 600;
+}
+
+.mensaje.error {
+  color: #ff6b6b !important;
+}
+
+.mensaje.ok {
+  color: #2ecc71 !important;
+}
+#mensaje.mensaje.error {
+  color: #ff6b6b !important;
+  display: block !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+}
+
+#mensaje.mensaje.ok {
+  color: #2ecc71 !important;
+  display: block !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+}
+
+#mensaje.mensaje {
+  margin-top: 10px;
+  font-size: 14px;
+  text-align: center;
+  font-weight: 600;
+  min-height: 18px;
+}
+
+/*cursor en el botón de enviar*/
+button {
+  cursor: pointer;
+}
+
+.input-group {
+  position: relative;
+  width: 100%;
+  margin-bottom: 10px;
+}
+
+.input-group input {
+  width: 100%;
+  padding-right: 35px;
+}
+
+.toggle-password {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  cursor: pointer;
+  font-size: 16px;
+  user-select: none;
+}
