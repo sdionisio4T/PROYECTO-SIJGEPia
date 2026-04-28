@@ -4,10 +4,8 @@ const preview = document.getElementById("preview");
 const params = new URLSearchParams(window.location.search);
 const expedienteId = params.get("id");
 
-const id = params.get("id");
-
 document.getElementById("tituloExpediente").innerText =
-  "Documentos del expediente #" + id;
+  "Documentos del expediente #" + expedienteId;
   
 const titulo = document.getElementById("tituloExpediente");
 titulo.textContent = "Documentos del expediente #" + expedienteId;
@@ -17,7 +15,8 @@ inputArchivo.addEventListener("change", (e) => {
 
   if (!archivo) return;
 
-  // 🔄 Simular carga (barra de progreso)
+  label.textContent = archivo.name;
+
   let progreso = 0;
 
   const intervalo = setInterval(() => {
@@ -25,10 +24,10 @@ inputArchivo.addEventListener("change", (e) => {
     barra.style.width = progreso + "%";
 
     if (progreso >= 100) {
-  clearInterval(intervalo);
-  mostrarPreview(archivo);
-  guardarDocumento(archivo);
-}
+      clearInterval(intervalo);
+      mostrarPreview(archivo);
+      guardarDocumento(archivo);
+    }
   }, 100);
 });
 
@@ -96,25 +95,3 @@ function cargarDocumentos() {
 cargarDocumentos();
 
 const label = document.querySelector(".custom-file span");
-
-inputArchivo.addEventListener("change", (e) => {
-  const archivo = e.target.files[0];
-
-  if (!archivo) return;
-
-  label.textContent = archivo.name; // 🔥 muestra nombre
-
-  let progreso = 0;
-
-  const intervalo = setInterval(() => {
-    progreso += 10;
-    barra.style.width = progreso + "%";
-
-    if (progreso >= 100) {
-      clearInterval(intervalo);
-      mostrarPreview(archivo);
-      guardarDocumento(archivo);
-    }
-  }, 100);
-});
-
