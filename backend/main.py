@@ -6,6 +6,7 @@ from pathlib import Path
 
 # Routers
 from routers import auth, usuarios, casos, expedientes, documentos, ia, reportes, backups
+from routers import pqrs
 
 # Crear carpeta uploads/ al arrancar
 @asynccontextmanager
@@ -46,6 +47,7 @@ app.include_router(documentos.router,  tags=["Documentos"])
 app.include_router(ia.router,          tags=["IA"])
 app.include_router(reportes.router,    tags=["Reportes"])
 app.include_router(backups.router,     tags=["Backups"])
+app.include_router(pqrs.router, tags=["PQRS"])
 
 # Ruta de prueba
 @app.get("/")

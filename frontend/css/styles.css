@@ -994,7 +994,180 @@ footer {
   border-radius: 8px;
 }
 
+.mensaje {
+  margin-top: 10px;
+  font-size: 14px;
+  text-align: center;
+  color: #2ecc71; /* verde */
+}
 
+/* Color olviaste tu contraseña */
+
+.forgot-password {
+  display: block;
+  margin: 10px 0;
+  text-align: center;
+  color: #ffffff;
+  font-size: 14px;
+  text-decoration: none;
+}
+
+.forgot-password:hover {
+  color: #ffd54f;
+  text-decoration: underline;
+}
+
+/* Mensaje de error o éxito en recuperación de contraseña */
+.mensaje {
+  margin-top: 10px;
+  font-size: 14px;
+  text-align: center;
+  font-weight: 600;
+}
+
+.mensaje.error {
+  color: #ff6b6b !important;
+}
+
+.mensaje.ok {
+  color: #2ecc71 !important;
+}
+#mensaje.mensaje.error {
+  color: #ff6b6b !important;
+  display: block !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+}
+
+#mensaje.mensaje.ok {
+  color: #2ecc71 !important;
+  display: block !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+}
+
+#mensaje.mensaje {
+  margin-top: 10px;
+  font-size: 14px;
+  text-align: center;
+  font-weight: 600;
+  min-height: 18px;
+}
+
+/*cursor en el botón de enviar*/
+button {
+  cursor: pointer;
+}
+
+.input-group {
+  position: relative;
+  width: 100%;
+  margin-bottom: 10px;
+}
+
+.input-group input {
+  width: 100%;
+  padding-right: 35px;
+}
+
+.toggle-password {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  cursor: pointer;
+  font-size: 16px;
+  user-select: none;
+}
+
+ /* ESTADOS DE PQRS CON COLOR */
+
+ .respuesta-pendiente {
+  color: #f39c12;
+  font-weight: 700;
+}
+
+.estado {
+  padding: 4px 10px;
+  border-radius: 10px;
+  font-size: 12px;
+  font-weight: bold;
+  color: white;
+}
+
+.estado.recibido {
+  background-color: #3498db; /* azul */
+}
+
+.estado.en_proceso {
+  background-color: #f39c12; /* naranja */
+}
+
+.estado.respondido {
+  background-color: #2ecc71; /* verde */
+}
+
+.estado.cerrado {
+  background-color: #7f8c8d; /* gris */
+}
+
+/* NUEVO FORMULARIO PQRS*/
+
+.modal {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.55);
+  justify-content: center;
+  align-items: center;
+  z-index: 999;
+}
+
+.modal-content {
+  width: min(560px, 92%);
+  background: #ffffff;
+  border-radius: 16px;
+  padding: 28px;
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.25);
+}
+
+.modal-content h2 {
+  margin-bottom: 18px;
+  color: #1f3c88;
+  text-align: center;
+}
+
+.pqrs-form {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.pqrs-form input,
+.pqrs-form select,
+.pqrs-form textarea {
+  width: 100%;
+  padding: 12px 14px;
+  border: 1px solid #cfd6e4;
+  border-radius: 10px;
+  font-size: 14px;
+  outline: none;
+}
+
+.pqrs-form textarea {
+  min-height: 140px;
+  resize: vertical;
+  line-height: 1.4;
+}
+
+.pqrs-form input:focus,
+.pqrs-form select:focus,
+.pqrs-form textarea:focus {
+  border-color: #1f3c88;
+  box-shadow: 0 0 0 3px rgba(31, 60, 136, 0.12);
+}
+
+backups
 /* ════════════════════════════════════════ */
 /*   GRÁFICAS DEL DASHBOARD                   */
 /* ════════════════════════════════════════ */
@@ -1214,3 +1387,69 @@ a.btn-accion-editar {
     margin: 0 auto;
   }
 }
+=======
+.form-actions {
+  display: flex;
+  gap: 12px;
+  justify-content: flex-end;
+}
+
+.btn-guardar,
+.btn-cancelar,
+.nuevo {
+  border: none;
+  border-radius: 10px;
+  padding: 10px 18px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.btn-guardar {
+  background: #1f3c88;
+  color: white;
+}
+
+.btn-cancelar {
+  background: #e74c3c;
+  color: white;
+}
+
+.nuevo {
+  background: #1f3c88;
+  color: white;
+}
+
+.btn-guardar:hover,
+.nuevo:hover {
+  background: #162d68;
+}
+
+.btn-cancelar:hover {
+  background: #c0392b;
+}
+
+#tablaPQRS {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+  background: white;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+#tablaPQRS th {
+  background: #1f3c88;
+  color: white;
+  padding: 14px;
+  text-align: left;
+}
+
+#tablaPQRS td {
+  padding: 12px 14px;
+  border-bottom: 1px solid #e7eaf0;
+}
+
+#tablaPQRS tr:hover {
+  background: #f5f7fb;
+}
+ main

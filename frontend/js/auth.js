@@ -1,6 +1,6 @@
 function login() {
   let correo = document.querySelector("input[type='email']").value;
-  let password = document.querySelector("input[type='password']").value;
+  let password = document.getElementById("password").value;
 
   fetch("http://127.0.0.1:8000/login", {
     method: "POST",
@@ -33,4 +33,16 @@ function login() {
   });
 
   return false;
+}
+
+function togglePassword(id, icon) {
+  const input = document.getElementById(id);
+
+  if (input.type === "password") {
+    input.type = "text";
+    icon.textContent = "🙈";
+  } else {
+    input.type = "password";
+    icon.textContent = "👁️";
+  }
 }

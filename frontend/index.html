@@ -15,15 +15,19 @@
   <img src="assets/logo.png" alt="SIGJEP" class="login-logo">
   <h2>Acceso</h2>
 
-  <!-- 🔥 TODO dentro del form -->
+  
   <form onsubmit="return login()">
 
     <input type="email" placeholder="Correo electrónico" required>
-    <input type="password" placeholder="Contraseña" required>
+    
+   <div class="input-group">
+  <input type="password" id="password" placeholder="Contraseña" required>
+  <span class="toggle-password" onclick="togglePassword('password', this)">👁️</span>
+</div>
 
-    <p class="forgot">
-      <a href="pages/recuperar.html">¿Olvidaste tu contraseña?</a>
-    </p>
+   <a href="pages/recuperar.html" class="forgot-password">
+  ¿Olvidaste tu contraseña?
+</a>
 
     <select>
       <option>Seleccionar rol</option>

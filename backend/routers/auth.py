@@ -1,4 +1,4 @@
-﻿from fastapi import APIRouter, Depends
+﻿from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from sqlalchemy import text
 from database import get_db
@@ -68,7 +68,7 @@ def register(user: UserCreate, db: Session = Depends(get_db)):
 
     usuario_existente = db.query(User).filter(User.email == user.email).first()
     if usuario_existente:
-        return {"error": "El usuario ya existe"}
+         raise HTTPException(status_code=409, detail="El usuario ya existe, incie sesion")
 
     password_hash = bcrypt.hashpw(user.password.encode(), bcrypt.gensalt()).decode()
 
@@ -93,10 +93,10 @@ def login(data: UserLogin, db: Session = Depends(get_db)):
     usuario = db.query(User).filter(User.email == data.email).first()
 
     if not usuario:
-        return {"error": "Usuario no existe"}
+        raise HTTPException(status_code=401, detail="Usuario no existe")
 
     if not bcrypt.checkpw(data.password.encode(), usuario.password.encode()):
-        return {"error": "Contraseña incorrecta"}
+        raise HTTPException(status_code=401, detail="Contraseña incorrecta")
 
     return {
         "msg": "Login exitoso",

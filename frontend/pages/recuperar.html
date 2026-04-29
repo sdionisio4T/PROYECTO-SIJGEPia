@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>SIGJEP - Login</title>
+  <title>Recuperación de contraseña</title>
   <link rel="icon" href="../assets/logo 2.png" type="image/png">
   <link rel="stylesheet" href="../css/styles.css">
 </head>
@@ -14,9 +14,10 @@
 <h2>Recuperar contraseña</h2>
 
 <form onsubmit="return recuperarPassword()">
-<input type="email" id="correo" placeholder="Ingresa tu correo">
-<button type="submit">Enviar enlace</button>
-<p id="mensaje" class="mensaje-exito"></p>
+  <input type="email" id="correo" placeholder="Ingresa tu correo">
+  <button type="submit">Enviar enlace</button>
+
+  <p id="mensaje" class="mensaje"></p>
 </form>
 
 <script src="../js/recuperar.js"></script>
