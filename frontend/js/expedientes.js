@@ -67,6 +67,8 @@ fila.innerHTML = `
   <td><button onclick="verDocumentos(${id})" class="${tieneDocs ? 'btn-subido' : 'btn-subir'}">
     📄 ${tieneDocs ? 'Subido' : 'Subir'}
   </button>
+  <td>
+  <button onclick="eliminarExpediente(${id})">🗑️</button></td>
   </td>
 `;
 
@@ -113,6 +115,50 @@ window.addEventListener("click", (e) => {
   if (e.target === modal) {
     modal.style.display = "none";
   }
+});
+
+function actualizarBotones() {
+  const filas = document.querySelectorAll("tbody tr");
+
+  filas.forEach(fila => {
+    const btn = fila.querySelector("button");
+    const idMatch = btn.getAttribute("onclick").match(/\d+/);
+    
+    if (!idMatch) return;
+
+    const id = idMatch[0];
+
+    if (tieneDocumentos(id)) {
+      btn.classList.remove("btn-subir");
+      btn.classList.add("btn-subido");
+      btn.innerHTML = "📄 Subido";
+    }
+  });
+}
+
+window.addEventListener("load", actualizarBotones);
+
+function eliminarExpediente(id) {
+  if (!confirm("¿Eliminar expediente?")) return;
+
+  // eliminar fila
+  event.target.closest("tr").remove();
+
+  // eliminar documentos asociados
+  const datos = JSON.parse(localStorage.getItem("documentos")) || {};
+  delete datos[id];
+  localStorage.setItem("documentos", JSON.stringify(datos));
+}
+
+const buscador = document.querySelector("input[type='text']");
+
+buscador.addEventListener("input", () => {
+  const valor = buscador.value.toLowerCase();
+
+  filas().forEach(fila => {
+    const texto = fila.textContent.toLowerCase();
+    fila.style.display = texto.includes(valor) ? "" : "none";
+  });
 });
 
 
