@@ -407,3 +407,10 @@ $RECYCLE.BIN/
 # End of https://www.toptal.com/developers/gitignore/api/python,node,visualstudiocode,macos,windows
 
 .vscode/
+
+.env
+.env.*
+.env3
+backend/.env*
+backend/credentials.json
+.vscode/
