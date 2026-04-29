@@ -1,21 +1,18 @@
-import { clasificarDocumento, generarResumen, generarBorrador } from "./api.js";
-
-//  VARIABLES GLOBALES
+// VARIABLES GLOBALES
 let expedienteSeleccionado = null;
 let archivoActual = null;
 let listaArchivos = [];
 
+const BACKEND_URL = "https://didactic-acorn-97p6p6x969wp39vwv-8000.app.github.dev";
 
-//  SELECCIONAR EXPEDIENTE
-export function seleccionarExpediente() {
+// SELECCIONAR EXPEDIENTE
+window.seleccionarExpediente = function() {
     const select = document.getElementById("expedienteSelect");
     expedienteSeleccionado = select.value;
-
     console.log("Expediente seleccionado:", expedienteSeleccionado);
 }
 
-
-//  SPINNER
+// SPINNER
 function mostrarSpinner() {
     document.getElementById("spinner").style.display = "block";
     document.getElementById("overlaySpinner").style.display = "block";
@@ -26,16 +23,13 @@ function ocultarSpinner() {
     document.getElementById("overlaySpinner").style.display = "none";
 }
 
-
-//  RENDERIZAR ARCHIVOS CON TARJETA + BARRA
+// RENDERIZAR ARCHIVOS
 function renderizarArchivos() {
     const contenedor = document.getElementById("listaArchivos");
     if (!contenedor) return;
-
     contenedor.innerHTML = "";
 
     listaArchivos.forEach((archivo) => {
-
         const item = document.createElement("div");
         item.classList.add("archivo-item");
 
@@ -54,59 +48,50 @@ function renderizarArchivos() {
         item.appendChild(barra);
         contenedor.appendChild(item);
 
-        // 🔥 ANIMACIÓN DE PROGRESO
         let porcentaje = 0;
-
         const intervalo = setInterval(() => {
             porcentaje += 10;
             progreso.style.width = porcentaje + "%";
-
-            if (porcentaje >= 100) {
-                clearInterval(intervalo);
-            }
+            if (porcentaje >= 100) clearInterval(intervalo);
         }, 100);
     });
 }
 
-
-//  SUBIR ARCHIVO
+// SUBIR ARCHIVO
 window.addEventListener("DOMContentLoaded", () => {
     const inputArchivo = document.getElementById("inputArchivo");
-
     if (inputArchivo) {
         inputArchivo.addEventListener("change", async function () {
             const archivo = inputArchivo.files[0];
-
             if (!archivo) return;
 
             mostrarSpinner();
-
-            await new Promise(resolve => setTimeout(resolve, 1500));
+            await new Promise(resolve => setTimeout(resolve, 1000));
 
             archivoActual = archivo;
-
-            // 🔥 GUARDAR EN LISTA
             listaArchivos.push(archivo);
 
             document.getElementById("nombreArchivo").textContent = archivo.name;
-
             renderizarArchivos();
-
             ocultarSpinner();
-
-            console.log("Archivo cargado:", archivo);
         });
     }
 });
 
-
-//  CLASIFICAR (SIMULADO)
-export async function clasificar() {
-    if (!expedienteSeleccionado) {
-        alert("Selecciona un expediente primero");
+// CLASIFICAR
+window.clasificar = async function() {
+    if (!archivoActual) {
+        alert("Primero sube un archivo");
         return;
     }
+    mostrarSpinner();
+    await new Promise(r => setTimeout(r, 2000));
+    document.getElementById("resultadoClasificacion").textContent = "Tutela";
+    ocultarSpinner();
+}
 
+// RESUMIR CON IA
+window.resumirArchivo = async function() {
     if (!archivoActual) {
         alert("Primero sube un archivo");
         return;
@@ -115,74 +100,42 @@ export async function clasificar() {
     try {
         mostrarSpinner();
 
-        await new Promise(r => setTimeout(r, 2000));
+        const formData = new FormData();
+        formData.append("archivo", archivoActual);
 
-        document.getElementById("resultadoClasificacion").textContent = "Tutela";
+        const respuesta = await fetch(BACKEND_URL + "/ia/resumir", {
+            method: "POST",
+            body: formData
+        });
+
+        const data = await respuesta.json();
+
+        if (data.resumen) {
+            document.getElementById("resultadoResumen").value = data.resumen;
+        } else {
+            document.getElementById("resultadoResumen").value = "Error: " + data.error;
+        }
 
     } catch (error) {
         console.error(error);
+        alert("Error al conectar con el servidor: " + error.message);
     } finally {
         ocultarSpinner();
     }
 }
 
-
-//  RESUMIR (SIMULADO)
-export async function resumir() {
-    if (!expedienteSeleccionado) {
-        alert("Selecciona un expediente primero");
-        return;
-    }
-
+// BORRADOR
+window.descargarBorrador = function() {
     if (!archivoActual) {
         alert("Primero sube un archivo");
         return;
     }
 
-    try {
-        mostrarSpinner();
-
-        await new Promise(r => setTimeout(r, 2000));
-
-        document.getElementById("resultadoResumen").value =
-            "El documento corresponde a una acción de tutela por posible vulneración de derechos fundamentales. Se recomienda revisión inmediata.";
-
-    } catch (error) {
-        console.error(error);
-    } finally {
-        ocultarSpinner();
-    }
-}
-
-
-//  BORRADOR (SIMULADO)
-export function descargarBorrador() {
-    if (!archivoActual) {
-        alert("Primero sube un archivo");
-        return;
-    }
-
-    const contenido = `
-BORRADOR JURÍDICO
-
-Expediente: ${expedienteSeleccionado}
-
-Documento analizado: ${archivoActual.name}
-
-Se recomienda actuación inmediata.
-`;
+    const contenido = `BORRADOR JURÍDICO\n\nExpediente: ${expedienteSeleccionado}\n\nDocumento analizado: ${archivoActual.name}\n\nSe recomienda actuación inmediata.`;
 
     const blob = new Blob([contenido], { type: "application/msword" });
-
     const a = document.createElement("a");
     a.href = URL.createObjectURL(blob);
     a.download = "borrador.doc";
     a.click();
 }
-
-
-//  CONECTAR CON HTML
-window.seleccionarExpediente = seleccionarExpediente;
-window.clasificar = clasificar;
-window.resumir = resumir;
-window.descargarBorrador = descargarBorrador;
