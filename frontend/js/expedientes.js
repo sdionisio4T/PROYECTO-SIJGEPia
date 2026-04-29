@@ -1,3 +1,5 @@
+let expedientes = JSON.parse(localStorage.getItem("expedientes")) || [];
+
 const btnNuevo = document.querySelector(".nuevo");
 const modal = document.getElementById("modalExpediente");
 const cerrarModal = document.getElementById("cerrarModal");
@@ -55,6 +57,15 @@ form.addEventListener("submit", (e) => {
 
 const fila = document.createElement("tr");
 const id = Date.now(); // ID único
+const nuevoExpediente = {
+  id,
+  tipo,
+  demandante,
+  fecha: fechaInput
+};
+
+expedientes.push(nuevoExpediente);
+localStorage.setItem("expedientes", JSON.stringify(expedientes));
 
 const tieneDocs = tieneDocumentos(id);
 
@@ -64,11 +75,17 @@ fila.innerHTML = `
   <td>${fechaFormateada}</td>
   <td>${textoVence}</td>
   <td class="${claseEstado}">${estado}</td>
-  <td><button onclick="verDocumentos(${id})" class="${tieneDocs ? 'btn-subido' : 'btn-subir'}">
-    📄 ${tieneDocs ? 'Subido' : 'Subir'}
-  </button>
+
   <td>
-  <button onclick="eliminarExpediente(${id})">🗑️</button></td>
+    <button onclick="verDocumentos(${id})" class="${tieneDocs ? 'btn-subido' : 'btn-subir'}">
+      📄 ${tieneDocs ? 'Subido' : 'Subir'}
+    </button>
+  </td>
+
+  <td>
+    <button onclick="eliminarExpediente(event, ${id})" class="btn-eliminar">
+      🗑️
+    </button>
   </td>
 `;
 
@@ -121,33 +138,42 @@ function actualizarBotones() {
   const filas = document.querySelectorAll("tbody tr");
 
   filas.forEach(fila => {
-    const btn = fila.querySelector("button");
-    const idMatch = btn.getAttribute("onclick").match(/\d+/);
-    
+    const btnDoc = fila.querySelector("td:nth-child(6) button");
+
+    if (!btnDoc) return;
+
+    const idMatch = btnDoc.getAttribute("onclick").match(/\d+/);
     if (!idMatch) return;
 
     const id = idMatch[0];
 
     if (tieneDocumentos(id)) {
-      btn.classList.remove("btn-subir");
-      btn.classList.add("btn-subido");
-      btn.innerHTML = "📄 Subido";
+      btnDoc.classList.remove("btn-subir");
+      btnDoc.classList.add("btn-subido");
+      btnDoc.innerHTML = "📄 Subido";
     }
   });
 }
 
-window.addEventListener("load", actualizarBotones);
+window.addEventListener("load", () => {
+  cargarExpedientes();
+  actualizarBotones();
+});
 
-function eliminarExpediente(id) {
-  if (!confirm("¿Eliminar expediente?")) return;
+function eliminarExpediente(e, id) {
+  if (!confirm("¿Seguro que quieres eliminar este expediente?")) return;
 
-  // eliminar fila
-  event.target.closest("tr").remove();
+  // eliminar de array
+  expedientes = expedientes.filter(exp => exp.id !== id);
+  localStorage.setItem("expedientes", JSON.stringify(expedientes));
 
-  // eliminar documentos asociados
+  // eliminar documentos
   const datos = JSON.parse(localStorage.getItem("documentos")) || {};
   delete datos[id];
   localStorage.setItem("documentos", JSON.stringify(datos));
+
+  // eliminar visual
+  e.target.closest("tr").remove();
 }
 
 const buscador = document.querySelector("input[type='text']");
@@ -160,5 +186,105 @@ buscador.addEventListener("input", () => {
     fila.style.display = texto.includes(valor) ? "" : "none";
   });
 });
+
+function exportarBackup() {
+  const data = {
+    expedientes: JSON.parse(localStorage.getItem("expedientes")) || [],
+    documentos: JSON.parse(localStorage.getItem("documentos")) || {}
+  };
+
+  const blob = new Blob([JSON.stringify(data, null, 2)], { type: "application/json" });
+  const url = URL.createObjectURL(blob);
+
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = "backup_completo.json";
+  a.click();
+}
+
+document.getElementById("importarBackup").addEventListener("change", (e) => {
+  const file = e.target.files[0];
+  if (!file) return;
+
+  const reader = new FileReader();
+
+  reader.onload = function(event) {
+    const data = JSON.parse(event.target.result);
+
+    if (data.expedientes) {
+      localStorage.setItem("expedientes", JSON.stringify(data.expedientes));
+    }
+
+    if (data.documentos) {
+      localStorage.setItem("documentos", JSON.stringify(data.documentos));
+    }
+
+    alert("Backup restaurado correctamente");
+    location.reload();
+  };
+
+  reader.readAsText(file);
+});
+
+function cargarExpedientes() {
+  tabla.innerHTML = "";
+
+  expedientes.forEach(exp => {
+    const fechaExpediente = new Date(exp.fecha);
+    const hoy = new Date();
+    const dias = Math.ceil((fechaExpediente - hoy) / (1000 * 60 * 60 * 24));
+
+    let textoVence = "";
+    let estado = "";
+    let claseEstado = "";
+
+    if (dias <= 0) {
+      textoVence = "Vencido";
+      estado = "Urgente";
+      claseEstado = "urgente";
+    } else if (dias === 1) {
+      textoVence = "1 día";
+      estado = "Urgente";
+      claseEstado = "urgente";
+    } else if (dias <= 3) {
+      textoVence = dias + " días";
+      estado = "Próximo";
+      claseEstado = "proximo";
+    } else {
+      textoVence = dias + " días";
+      estado = "A tiempo";
+      claseEstado = "atiempo";
+    }
+
+    const fila = document.createElement("tr");
+    const tieneDocs = tieneDocumentos(exp.id);
+
+    fila.innerHTML = `
+      <td>${exp.tipo}</td>
+      <td>${exp.demandante}</td>
+      <td>${new Date(exp.fecha).toLocaleDateString("es-CO")}</td>
+      <td>${textoVence}</td>
+      <td class="${claseEstado}">${estado}</td>
+
+      <td>
+        <button onclick="verDocumentos(${exp.id})" class="${tieneDocs ? 'btn-subido' : 'btn-subir'}">
+          📄 ${tieneDocs ? 'Subido' : 'Subir'}
+        </button>
+      </td>
+
+      <td>
+        <button onclick="eliminarExpediente(event, ${exp.id})" class="btn-eliminar">
+          🗑️
+        </button>
+      </td>
+    `;
+
+    tabla.appendChild(fila);
+    actualizarBotones();
+  });
+}
+
+
+
 
 
