@@ -34,6 +34,8 @@
             <th>Correo</th>
             <th>Tipo</th>
             <th>Mensaje</th>
+            <th>Respuesta</th>
+            <th>Estado</th>
         </tr>
     </thead>
 
@@ -48,29 +50,28 @@
 
         <h2>Nuevo PQRS</h2>
 
-        <form id="pqrsForm">
+      <form id="pqrsForm" class="pqrs-form">
 
-            <input type="text" id="nombre" placeholder="Nombre">
+  <input type="text" id="nombre" placeholder="Nombre" required>
 
-            <input type="email" id="correo" placeholder="Correo">
+  <input type="email" id="correo" placeholder="Correo" required>
 
-            <select id="tipo">
-                <option value="">Tipo de solicitud</option>
-                <option>Petición</option>
-                <option>Queja</option>
-                <option>Reclamo</option>
-                <option>Sugerencia</option>
-            </select>
+  <select id="tipo" required>
+    <option value="">Tipo de solicitud</option>
+    <option value="peticion">Petición</option>
+    <option value="queja">Queja</option>
+    <option value="reclamo">Reclamo</option>
+    <option value="sugerencia">Sugerencia</option>
+  </select>
 
-            <textarea id="mensaje" placeholder="Escribe tu mensaje"></textarea>
+  <textarea id="mensaje" placeholder="Escribe tu mensaje" required></textarea>
 
-            <button type="submit">Guardar</button>
+  <div class="form-actions">
+    <button type="submit" class="btn-guardar">Guardar</button>
+    <button type="button" id="cerrarModal" class="btn-cancelar">Cancelar</button>
+  </div>
 
-            <button type="button" id="cerrarModal">
-                Cancelar
-            </button>
-
-        </form>
+</form>
 
     </div>
 
