@@ -17,9 +17,16 @@
 <section class="content">
 
 <div class="top">
-<h2>Gestión de Expedientes</h2>
-<button class="nuevo">Nuevo Expediente</button>
+  <h2>Gestión de Expedientes</h2>
+
+  <div class="acciones-top">
+    <button onclick="exportarBackup()">💾 Backup</button>
+    <button onclick="document.getElementById('importarBackup').click()">📂 Restaurar</button>
+    <button class="nuevo">Nuevo Expediente</button>
+  </div>
 </div>
+
+<input type="file" id="importarBackup" hidden>
 
 <div class="filtros">
 
@@ -147,8 +154,8 @@
   </div>
 </div>
 
-<script src="../js/expedientes.js"></script>
 <script src="../js/components.js"></script>
+<script src="../js/expedientes.js"></script>
 
 </body>
 </html>
