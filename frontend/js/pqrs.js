@@ -65,14 +65,15 @@ form.addEventListener("submit", async (e) => {
     })
   });
 
-  const data = await res.json();
+ const data = await res.json();
 
   if (res.ok) {
     form.reset();
     modal.style.display = "none";
     cargarPQRS();
+    mostrarExito("PQRS radicada correctamente. Número: " + data.numero_radicado);
   } else {
-    alert(data.detail || "Error al guardar PQRS");
+    mostrarError(data.detail || "Error al radicar la PQRS");
   }
 });
 

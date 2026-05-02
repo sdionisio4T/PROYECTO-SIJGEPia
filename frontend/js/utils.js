@@ -6,8 +6,6 @@ function formatearFecha(fecha) {
   return fechaObj.toLocaleDateString('es-CO', formato)
 }
 
-// PRUEBA - //
-console.log(formatearFecha("2026-04-11"))
 
 
 function mostrarError(mensaje) {
@@ -156,8 +154,9 @@ function cerrarSesion() {
   window.location.href = "../index.html"
 }
 
-document.querySelector(".logout").addEventListener("click", cerrarSesion)
-
+document.addEventListener("click", function(e) {
+  if (e.target.closest(".logout")) cerrarSesion()
+})
 function obtenerRol() {
   return localStorage.getItem("rol")
 }
